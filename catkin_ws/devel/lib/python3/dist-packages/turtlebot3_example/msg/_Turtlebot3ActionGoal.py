@@ -5,11 +5,11 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import actionlib_msgs.msg
-import geometry_msgs.msg
-import genpy
 import std_msgs.msg
+import genpy
+import geometry_msgs.msg
 import turtlebot3_example.msg
+import actionlib_msgs.msg
 
 class Turtlebot3ActionGoal(genpy.Message):
   _md5sum = "629663823fea578d64180162f10bec87"
@@ -266,15 +266,15 @@ def _get_struct_3I():
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
-_struct_3d = None
-def _get_struct_3d():
-    global _struct_3d
-    if _struct_3d is None:
-        _struct_3d = struct.Struct("<3d")
-    return _struct_3d
 _struct_2I = None
 def _get_struct_2I():
     global _struct_2I
     if _struct_2I is None:
         _struct_2I = struct.Struct("<2I")
     return _struct_2I
+_struct_3d = None
+def _get_struct_3d():
+    global _struct_3d
+    if _struct_3d is None:
+        _struct_3d = struct.Struct("<3d")
+    return _struct_3d
