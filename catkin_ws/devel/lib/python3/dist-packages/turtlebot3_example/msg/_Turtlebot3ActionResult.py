@@ -6,9 +6,9 @@ import genpy
 import struct
 
 import turtlebot3_example.msg
+import std_msgs.msg
 import genpy
 import actionlib_msgs.msg
-import std_msgs.msg
 
 class Turtlebot3ActionResult(genpy.Message):
   _md5sum = "5489bcfa93e36e07a0b801f3ac4c7c97"
@@ -335,15 +335,15 @@ def _get_struct_3I():
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
-_struct_2I = None
-def _get_struct_2I():
-    global _struct_2I
-    if _struct_2I is None:
-        _struct_2I = struct.Struct("<2I")
-    return _struct_2I
 _struct_B = None
 def _get_struct_B():
     global _struct_B
     if _struct_B is None:
         _struct_B = struct.Struct("<B")
     return _struct_B
+_struct_2I = None
+def _get_struct_2I():
+    global _struct_2I
+    if _struct_2I is None:
+        _struct_2I = struct.Struct("<2I")
+    return _struct_2I
