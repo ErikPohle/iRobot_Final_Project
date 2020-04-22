@@ -273,6 +273,21 @@ std_srvs_generate_messages_py/fast:
 .PHONY : std_srvs_generate_messages_py/fast
 
 # Convenience name for target.
+turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/rule:
+	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/rule
+.PHONY : turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/rule
+
+# Convenience name for target.
+particle_shooter_plugin: turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/rule
+
+.PHONY : particle_shooter_plugin
+
+# fast build rule for target.
+particle_shooter_plugin/fast:
+	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build
+.PHONY : particle_shooter_plugin/fast
+
+# Convenience name for target.
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule:
 	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
 .PHONY : turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
@@ -512,6 +527,33 @@ gazebo_msgs_generate_messages_nodejs/fast:
 	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/gazebo_msgs_generate_messages_nodejs.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/gazebo_msgs_generate_messages_nodejs.dir/build
 .PHONY : gazebo_msgs_generate_messages_nodejs/fast
 
+src/particle_shooter_plugin.o: src/particle_shooter_plugin.cpp.o
+
+.PHONY : src/particle_shooter_plugin.o
+
+# target to build an object file
+src/particle_shooter_plugin.cpp.o:
+	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o
+.PHONY : src/particle_shooter_plugin.cpp.o
+
+src/particle_shooter_plugin.i: src/particle_shooter_plugin.cpp.i
+
+.PHONY : src/particle_shooter_plugin.i
+
+# target to preprocess a source file
+src/particle_shooter_plugin.cpp.i:
+	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.i
+.PHONY : src/particle_shooter_plugin.cpp.i
+
+src/particle_shooter_plugin.s: src/particle_shooter_plugin.cpp.s
+
+.PHONY : src/particle_shooter_plugin.s
+
+# target to generate assembly for a file
+src/particle_shooter_plugin.cpp.s:
+	cd /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/build && $(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.s
+.PHONY : src/particle_shooter_plugin.cpp.s
+
 src/turtlebot3_drive.o: src/turtlebot3_drive.cpp.o
 
 .PHONY : src/turtlebot3_drive.o
@@ -557,6 +599,7 @@ help:
 	@echo "... trajectory_msgs_generate_messages_cpp"
 	@echo "... dynamic_reconfigure_generate_messages_lisp"
 	@echo "... std_srvs_generate_messages_py"
+	@echo "... particle_shooter_plugin"
 	@echo "... std_srvs_generate_messages_lisp"
 	@echo "... test"
 	@echo "... std_srvs_generate_messages_eus"
@@ -575,6 +618,9 @@ help:
 	@echo "... gazebo_msgs_generate_messages_eus"
 	@echo "... gazebo_msgs_generate_messages_lisp"
 	@echo "... gazebo_msgs_generate_messages_nodejs"
+	@echo "... src/particle_shooter_plugin.o"
+	@echo "... src/particle_shooter_plugin.i"
+	@echo "... src/particle_shooter_plugin.s"
 	@echo "... src/turtlebot3_drive.o"
 	@echo "... src/turtlebot3_drive.i"
 	@echo "... src/turtlebot3_drive.s"

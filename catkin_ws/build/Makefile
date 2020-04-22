@@ -1611,6 +1611,19 @@ std_srvs_generate_messages_py/fast:
 .PHONY : std_srvs_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named particle_shooter_plugin
+
+# Build rule for target.
+particle_shooter_plugin: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 particle_shooter_plugin
+.PHONY : particle_shooter_plugin
+
+# fast build rule for target.
+particle_shooter_plugin/fast:
+	$(MAKE) -f turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build.make turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/build
+.PHONY : particle_shooter_plugin/fast
+
+#=============================================================================
 # Target rules for targets named std_srvs_generate_messages_lisp
 
 # Build rule for target.
@@ -1968,6 +1981,7 @@ help:
 	@echo "... trajectory_msgs_generate_messages_cpp"
 	@echo "... dynamic_reconfigure_generate_messages_lisp"
 	@echo "... std_srvs_generate_messages_py"
+	@echo "... particle_shooter_plugin"
 	@echo "... std_srvs_generate_messages_lisp"
 	@echo "... std_srvs_generate_messages_eus"
 	@echo "... trajectory_msgs_generate_messages_eus"

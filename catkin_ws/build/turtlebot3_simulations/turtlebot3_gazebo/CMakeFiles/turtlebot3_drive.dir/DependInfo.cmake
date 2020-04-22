@@ -19,7 +19,6 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include"
   "/opt/ros/melodic/include"
   "/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/gazebo-9"
@@ -34,6 +33,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/include/ignition/msgs1"
   "/usr/include/ignition/common1"
   "/usr/include/ignition/fuel_tools1"
+  "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include"
   "/usr/include/uuid"
   "/usr/include/x86_64-linux-gnu"
   )
