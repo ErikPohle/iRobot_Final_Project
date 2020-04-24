@@ -8,12 +8,12 @@ class Environment():
         # need number of asteroids to be generated
         # just assume dimensions are 400 x 400
 
-        self.listOfAsteroids = []
+        self.dictOfAsteroids = {}
         self.mapLength = mapDimensions[0]
         self.mapWidth = mapDimensions[1]
         self.mapHeight = mapDimensions[2]
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 5
+        self.asteroidSpeed = 2
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")
@@ -37,7 +37,12 @@ class Environment():
             asteroidY = random.randint(0, self.mapWidth)
             asteroidZ = random.randint(50, self.mapHeight)
             ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
-            self.listOfAsteroids.append(ast)
+
+
+            x = "astr" + str(random.randint(0, 100000))
+            while x in self.dictOfAsteroids:
+                x = "astr" + str(random.randint(0, 100000))
+            self.dictOfAsteroids[x] = ast
         
         print("LOG: Spawned Asteroids Succesfully")
 
@@ -45,18 +50,43 @@ class Environment():
         # hmmm
         # need Publisher/Subscriber for health (if asteroid hits player) and points (if player destroys asteroid)
 
-        for i in self.listOfAsteroids:
-            pos = i.getPos()
+        for i in self.dictOfAsteroids:
+            pos = self.dictOfAsteroids[i].getPos()
             
             # check if z pos is hitting the ground
             if pos[2] <= 25:
                 self.gameOver = True
                 return
+            
+            # if no asteroids have hit the ground yet
+            # check if the players bullet hit an asteroid
+            # do we need to worry about traveling time of bullet to asteroid?
+            # or do we just assume its immediately hitting the asteroid?
+
+            # subscribe to channel, listen for shot
+                
     
     def updateAsteroids(self):
-        for i in self.listOfAsteroids:
-            pos = i.getPos()
-            i.updatePos(pos[0], pos[1], pos[2] - self.asteroidSpeed)
+        newDict = {}
+        for i in self.dictOfAsteroids:
+            
+            # if hit, just continue, we dont want to update this asteroid and add it to tempList
+            # only non-hit asteroids go on tempList
+            if self.dictOfAsteroids[i].isHit:
+                continue
+            
+            else:
+                pos = self.dictOfAsteroids[i].getPos()
+                newDict[i] = self.dictOfAsteroids[i]
+                # x,y,z - z represents height from ground each asteroid is
+                newDict[i].updatePos(pos[0], pos[1], pos[2] - self.asteroidSpeed)
+        
+        self.dictOfAsteroids = newDict
+
+        if len(self.dictOfAsteroids) == 0:
+            return -1
+        else:
+            return 0
             
 
 if __name__ == "__main__":

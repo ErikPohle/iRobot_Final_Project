@@ -6,28 +6,30 @@ import environment
 import time
 
 def runSim(env):
-	for i in env.listOfAsteroids:
-		print(i.getPos()),
 	
-	
-	env.updateAsteroids()
+	for i in env.dictOfAsteroids:
+		print(i),
+
+	outOfAsteroids = env.updateAsteroids()
 	env.asteroidCollision()
+
+	if outOfAsteroids == -1:
+		print("Out of Asteroids - Spawn More")
+		outOfAsteroids = 0
+		env.spawnAsteroids()
 	
 	if env.gameOver == True:
 		print("Game Over")
 		return -1
 
-	for i in env.listOfAsteroids:
-		print(i.getPos()),
 
 
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description="Lab7")
+	parser = argparse.ArgumentParser(description="Invade This")
 	parser.add_argument('-m','--m',nargs=1,default=[400, 400, 400],help='Map Size')
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
 	args = parser.parse_args()
-	lastFrameTime = 0
 
 	env = environment.Environment(args.m, args.na)
 	env.spawnAsteroids()
@@ -36,7 +38,7 @@ if __name__ == "__main__":
 	numIterations = 1
 
 	while x != -1:
-		print(numIterations)
+		#print(numIterations)
 		numIterations += 1
 		x = runSim(env)
 

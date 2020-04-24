@@ -6,7 +6,11 @@ class Asteroid():
         self.x = xPos
         self.y = yPos
         self.z = zPos
-        self.isHit = False
+        ranN = random.randint(0, 10)
+        if ranN % 2 == 0:
+            self.isHit = True
+        else:
+            self.isHit = True
         
     def updatePos(self, xPos, yPos, zPos):
         self.x = xPos
