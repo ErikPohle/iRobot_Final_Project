@@ -13,7 +13,7 @@ class Environment():
         self.mapWidth = mapDimensions[1]
         self.mapHeight = mapDimensions[2]
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 2
+        self.asteroidSpeed = 5
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")
@@ -66,7 +66,7 @@ class Environment():
             # subscribe to channel, listen for shot
                 
     
-    def updateAsteroids(self):
+    def updateAsteroids(self, dt):
         newDict = {}
         for i in self.dictOfAsteroids:
             
@@ -79,7 +79,7 @@ class Environment():
                 pos = self.dictOfAsteroids[i].getPos()
                 newDict[i] = self.dictOfAsteroids[i]
                 # x,y,z - z represents height from ground each asteroid is
-                newDict[i].updatePos(pos[0], pos[1], pos[2] - self.asteroidSpeed)
+                newDict[i].updatePos(pos[0], pos[1], pos[2] - (self.asteroidSpeed * dt))
         
         self.dictOfAsteroids = newDict
 

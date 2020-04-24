@@ -5,12 +5,11 @@ from geometry_msgs.msg import PoseStamped
 import environment
 import time
 
-def runSim(env):
+def runSim(env, dt):
 	
-	for i in env.dictOfAsteroids:
-		print(i),
 
-	outOfAsteroids = env.updateAsteroids()
+	print(len(env.dictOfAsteroids))
+	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
 	if outOfAsteroids == -1:
@@ -34,13 +33,20 @@ if __name__ == "__main__":
 	env = environment.Environment(args.m, args.na)
 	env.spawnAsteroids()
 
-	x = runSim(env)
+	x = runSim(env, 1)
 	numIterations = 1
+	lastFrameTime = time.time()
 
 	while x != -1:
 		#print(numIterations)
 		numIterations += 1
-		x = runSim(env)
+
+		currentTime = time.time()
+		dt = currentTime - lastFrameTime
+		lastFrameTime = currentTime
+
+
+		x = runSim(env, dt)
 
 	"""
 	parser = argparse.ArgumentParser(description="Lab7")
