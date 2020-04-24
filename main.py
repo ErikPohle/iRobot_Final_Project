@@ -7,8 +7,6 @@ import time
 
 def runSim(env, dt):
 	
-
-	print(len(env.dictOfAsteroids))
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
