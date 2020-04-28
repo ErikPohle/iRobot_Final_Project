@@ -1,9 +1,10 @@
 import rospy
 import numpy as numpy
 import argparse
-from geometry_msgs.msg import PoseStamped
-import environment
 import time
+
+import environment
+import brain
 
 def runSim(env, dt):
 	
@@ -28,12 +29,21 @@ if __name__ == "__main__":
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
 	args = parser.parse_args()
 
+	#BRAIN TESTING
+	# brain.init_node_and_such()
+
 	env = environment.Environment(args.m, args.na)
 	env.spawnAsteroids()
 
 	x = runSim(env, 1)
 	numIterations = 1
 	lastFrameTime = time.time()
+
+	#BRAIN TESTING
+	# brain.queueDest(0.5,0.5)		#top left
+	# brain.queueDest(0.5,-0.5)		#top right
+	# brain.queueDest(-0.5,-0.5)	#bottom right
+	# brain.queueDest(-0.5,0.5)		#bottom left
 
 	while x != -1:
 		#print(numIterations)
@@ -45,6 +55,13 @@ if __name__ == "__main__":
 
 
 		x = runSim(env, dt)
+
+	#BRAIN TESTING
+	# try:
+	# 	while len(brain.dest_queue) > 0:
+	# 		pass
+	# except KeyboardInterrupt:
+	# 	pass
 
 	"""
 	parser = argparse.ArgumentParser(description="Lab7")
