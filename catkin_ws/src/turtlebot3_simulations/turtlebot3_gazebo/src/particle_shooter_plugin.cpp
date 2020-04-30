@@ -19,14 +19,25 @@
 #include <ignition/math/Vector3.hh>
 #include <ignition/math/Quaternion.hh>
 
+
+//Adding packages that might be useful
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+
+
+//including turtlebot3
+#include "turtlebot3_gazebo/turtlebot3_drive.h"
+
 namespace gazebo
 {
-class ParticleShooterPlugin : public WorldPlugin
+class ParticleShooterPlugin : public WorldPlugin //, public Turtlebot3Drive
 {
 public:
   ParticleShooterPlugin() : WorldPlugin()
   {
   }
+
+
 
   void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
   {
@@ -37,6 +48,7 @@ public:
         << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
       return;
     }
+
     
     
     this->world = _world;
@@ -80,9 +92,65 @@ public:
 
     GetParticleList();
     OutputParticleList();
+    Subscribe_And_Publish();
+
+
+    //odomMsgCallBack();
 
     ROS_DEBUG("Particle Shooter Ready....");
   }
+
+
+
+  void chatterCallback(const geometry_msgs::Twist::ConstPtr& msg)
+  {
+    
+    ROS_WARN("HELLO");
+
+  }
+
+
+  void Subscribe_And_Publish(){
+
+    // initialize ROS parameter
+    ROS_WARN("Subscribe_And_Publish initalize");
+
+    ros::NodeHandle n;
+
+    std::cout << "HIIIII";
+    
+    //std::string cmd_vel_topic_name = n.param<std::string>("cmd_vel_topic_name", "");
+
+    ros::Publisher pos_pub = n.advertise<geometry_msgs::Twist>("rostopic", 10);
+
+    std::cout << pos_pub;
+
+    ros::Subscriber pos_sub = n.subscribe("robot_pos", 10, &ParticleShooterPlugin::chatterCallback, this);
+
+    std::cout << pos_sub;
+
+    std::cout << "HIIIII";
+  }
+
+  //Get turtlebot position
+  // void odomMsgCallBack(const nav_msgs::Odometry::ConstPtr &msg)
+  // {
+  //   double siny = 2.0 * (msg->pose.pose.orientation.w * msg->pose.pose.orientation.z + msg->pose.pose.orientation.x * msg->pose.pose.orientation.y);
+  //   double cosy = 1.0 - 2.0 * (msg->pose.pose.orientation.y * msg->pose.pose.orientation.y + msg->pose.pose.orientation.z * msg->pose.pose.orientation.z);  
+
+  //   //tb3_pose_ = atan2(siny, cosy);
+
+    
+  //   double x_pos = msg->pose.pose.orientation.x;
+  //   double y_pos = msg->pose.pose.orientation.y;
+  //   double z_pos = msg->pose.pose.orientation.z;
+
+  //   using namespace std;
+
+  //   cout << x_pos << " - x_pos for turtlebot";
+
+  // }
+
 
 
   void Reset()
@@ -289,6 +357,10 @@ public:
   protected: sdf::ElementPtr sdf;
   /// \brief Maps model IDs to ModelNames
   private: std::map<int, std::string> modelIDToName;
+
+  private:
+        ros::NodeHandle n;
+        ros::Subscriber sub;
   
   
   // Update Loop frequency, rate at which we restart the positions and apply force to particles
@@ -314,5 +386,32 @@ public:
   std::string particle_base_name = "particle";
 
 };
+
+
+int main(int argc, char* argv[])
+{
+
+
+  ros::init(argc, argv, "particle_listener");
+
+  ParticleShooterPlugin particle;
+
+  ros::Rate loop_rate(125);
+
+  while (ros::ok())
+  {
+    //particle.controlLoop();
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+
+  return 0;
+
+}
+
 GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 }
+
+
+
+

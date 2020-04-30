@@ -48,7 +48,12 @@ class Turtlebot3Drive
   bool init();
   bool controlLoop();
 
+  //void callodomMsgCallBack(){odomMsgCallBack()}
+  
+
+
  private:
+ //protected:
   // ROS NodeHandle
   ros::NodeHandle nh_;
   ros::NodeHandle nh_priv_;
@@ -78,5 +83,6 @@ class Turtlebot3Drive
   void updatecommandVelocity(double linear, double angular);
   void laserScanMsgCallBack(const sensor_msgs::LaserScan::ConstPtr &msg);
   void odomMsgCallBack(const nav_msgs::Odometry::ConstPtr &msg);
+  
 };
 #endif // TURTLEBOT3_DRIVE_H_

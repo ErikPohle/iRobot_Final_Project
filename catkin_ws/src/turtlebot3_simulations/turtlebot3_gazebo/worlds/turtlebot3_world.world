@@ -115,13 +115,13 @@
     <include>
       <uri>model://testing_surface</uri>
       <name>testing_surface1</name>
-      <pose>-3 0 0.5 0 1.57 0</pose>
+      <pose>-2 0 0.5 0 1.57 0</pose>
     </include>
     
     <include>
       <uri>model://testing_surface</uri>
       <name>testing_surface1</name>
-      <pose>0 -3 0.5 1.57 0 0</pose>
+      <pose>0 -2 0.5 1.57 0 0</pose>
     </include>
     
     <include>
@@ -155,11 +155,16 @@
       <y_axis_force>-5000.0</y_axis_force>
       <z_axis_force>0.0</z_axis_force>
       
-      <x_origin>0.0</x_origin>
-      <y_origin>0.0</y_origin>
-      <z_origin>0.5</z_origin>
+      <!-- <x_origin>0.0</x_origin> -->
+      <!-- <y_origin>0.0</y_origin> -->
+      <!-- <z_origin>0.5</z_origin> -->
+
+      <x_origin>0.0</x_origin> 
+      <y_origin>0.0</y_origin> 
+      <z_origin>0.0</z_origin>
+
       
-      <random_range>0.5</random_range>
+      <!-- <random_range>0.5</random_range> -->
       
     </plugin>
 
