@@ -48,6 +48,7 @@ catkin_package(
 ################################################################################
 link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 # For particle_shooter_plugin plugin
 add_library(particle_shooter_plugin src/particle_shooter_plugin.cpp)

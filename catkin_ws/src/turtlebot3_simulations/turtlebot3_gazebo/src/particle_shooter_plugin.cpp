@@ -23,6 +23,12 @@
 //Adding packages that might be useful
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
+#include <thread>
+#include "ros/ros.h"
+#include "ros/callback_queue.h"
+#include "ros/subscribe_options.h"
+#include "std_msgs/Float32.h"
 
 
 //including turtlebot3
@@ -38,16 +44,60 @@ public:
   }
 
 
+  /// \brief Handle an incoming message from ROS
+  /// \param[in] _msg A float value that is used to set the velocity
+  /// of the Velodyne.
+  public: void OnRosMsg(const std_msgs::Float32ConstPtr &_msg)
+  {
+    ///this->SetVelocity(_msg->data);
+    std::cout << _msg->data;
+  }
+
+  /// \brief ROS helper function that processes messages
+  private: void QueueThread()
+  {
+    static const double timeout = 0.01;
+    while (this->rosNode->ok())
+    {
+      this->rosQueue.callAvailable(ros::WallDuration(timeout));
+    }
+  }
 
   void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
   {
     // Make sure the ROS node for Gazebo has already been initialized                                                                                    
+    // if (!ros::isInitialized())
+    // {
+    //   ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
+    //     << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
+    //   return;
+    // }
+
     if (!ros::isInitialized())
     {
-      ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
-        << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
-      return;
+      int argc = 0;
+      char **argv = NULL;
+      ros::init(argc, argv, "gazebo_client",
+          ros::init_options::NoSigintHandler);
     }
+
+
+    // Create our ROS node. This acts in a similar manner to
+    // the Gazebo node
+    this->rosNode.reset(new ros::NodeHandle("gazebo_client"));
+
+    // Create a named topic, and subscribe to it.
+    ros::SubscribeOptions so =
+      ros::SubscribeOptions::create<std_msgs::Float32>(
+          "/vel_cmd",
+          1,
+          boost::bind(&ParticleShooterPlugin::OnRosMsg, this, _1),
+          ros::VoidPtr(), &this->rosQueue);
+    this->rosSub = this->rosNode->subscribe(so);
+
+    // Spin up the queue helper thread.
+    this->rosQueueThread =
+      std::thread(std::bind(&ParticleShooterPlugin::QueueThread, this));
 
     
     
@@ -102,55 +152,36 @@ public:
 
 
 
-  void chatterCallback(const geometry_msgs::Twist::ConstPtr& msg)
+  void chatterCallback(const nav_msgs::Odometry::ConstPtr &msg)
   {
-    
-    ROS_WARN("HELLO");
+    double z_pos = msg->pose.pose.orientation.z;
+    std::cout << "INSIDE CHATTER CALLBACK";
+    std::cout << z_pos;
 
   }
 
 
-  void Subscribe_And_Publish(){
+  bool Subscribe_And_Publish(){
 
     // initialize ROS parameter
     ROS_WARN("Subscribe_And_Publish initalize");
+    //ros::init("particle_listener");
 
     ros::NodeHandle n;
 
-    std::cout << "HIIIII";
+    // initialize ROS parameter
+    std::string cmd_vel_topic_name = n.param<std::string>("cmd_vel_topic_name", "");
     
     //std::string cmd_vel_topic_name = n.param<std::string>("cmd_vel_topic_name", "");
 
-    ros::Publisher pos_pub = n.advertise<geometry_msgs::Twist>("rostopic", 10);
+    ros::Publisher pos_pub = n.advertise<geometry_msgs::Twist>(cmd_vel_topic_name, 10);
 
-    std::cout << pos_pub;
-
+   
     ros::Subscriber pos_sub = n.subscribe("robot_pos", 10, &ParticleShooterPlugin::chatterCallback, this);
 
-    std::cout << pos_sub;
 
-    std::cout << "HIIIII";
+    return true;
   }
-
-  //Get turtlebot position
-  // void odomMsgCallBack(const nav_msgs::Odometry::ConstPtr &msg)
-  // {
-  //   double siny = 2.0 * (msg->pose.pose.orientation.w * msg->pose.pose.orientation.z + msg->pose.pose.orientation.x * msg->pose.pose.orientation.y);
-  //   double cosy = 1.0 - 2.0 * (msg->pose.pose.orientation.y * msg->pose.pose.orientation.y + msg->pose.pose.orientation.z * msg->pose.pose.orientation.z);  
-
-  //   //tb3_pose_ = atan2(siny, cosy);
-
-    
-  //   double x_pos = msg->pose.pose.orientation.x;
-  //   double y_pos = msg->pose.pose.orientation.y;
-  //   double z_pos = msg->pose.pose.orientation.z;
-
-  //   using namespace std;
-
-  //   cout << x_pos << " - x_pos for turtlebot";
-
-  // }
-
 
 
   void Reset()
@@ -358,9 +389,17 @@ public:
   /// \brief Maps model IDs to ModelNames
   private: std::map<int, std::string> modelIDToName;
 
-  private:
-        ros::NodeHandle n;
-        ros::Subscriber sub;
+  /// \brief A node use for ROS transport
+  private: std::unique_ptr<ros::NodeHandle> rosNode;
+
+  /// \brief A ROS subscriber
+  private: ros::Subscriber rosSub;
+
+  /// \brief A ROS callbackqueue that helps process messages
+  private: ros::CallbackQueue rosQueue;
+
+  /// \brief A thread the keeps running the rosQueue
+  private: std::thread rosQueueThread;
   
   
   // Update Loop frequency, rate at which we restart the positions and apply force to particles
@@ -385,29 +424,31 @@ public:
   
   std::string particle_base_name = "particle";
 
+  
+
 };
 
-
 int main(int argc, char* argv[])
-{
-
-
-  ros::init(argc, argv, "particle_listener");
-
-  ParticleShooterPlugin particle;
-
-  ros::Rate loop_rate(125);
-
-  while (ros::ok())
   {
-    //particle.controlLoop();
-    ros::spinOnce();
-    loop_rate.sleep();
+
+    std::cout << "INSIDE MAIN";
+    ros::init(argc, argv, "particle_listener");
+
+    ParticleShooterPlugin particle;
+
+    ros::Rate loop_rate(125);
+
+    while (ros::ok())
+    {
+      //particle.controlLoop();
+      ros::spinOnce();
+      loop_rate.sleep();
+    }
+
+    return 0;
+
   }
 
-  return 0;
-
-}
 
 GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 }
