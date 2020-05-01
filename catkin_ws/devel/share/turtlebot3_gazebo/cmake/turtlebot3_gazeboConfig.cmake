@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(turtlebot3_gazebo_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include " STREQUAL " ")
+if(NOT "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/include;/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include " STREQUAL " ")
   set(turtlebot3_gazebo_INCLUDE_DIRS "")
-  set(_include_dirs "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include")
+  set(_include_dirs "/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/include;/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include")
   if(NOT "https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues " STREQUAL " ")
     set(_report "Check the issue tracker 'https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT "http://wiki.ros.org/turtlebot3_gazebo " STREQUAL " ")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/lib;/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/lib;/opt/ros/melodic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(turtlebot3_gazebo_EXPORTED_TARGETS "")
+set(turtlebot3_gazebo_EXPORTED_TARGETS "turtlebot3_gazebo_generate_messages_cpp;turtlebot3_gazebo_generate_messages_eus;turtlebot3_gazebo_generate_messages_lisp;turtlebot3_gazebo_generate_messages_nodejs;turtlebot3_gazebo_generate_messages_py")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${turtlebot3_gazebo_EXPORTED_TARGETS})
   if(NOT TARGET ${t})
@@ -185,7 +185,7 @@ foreach(t ${turtlebot3_gazebo_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "roscpp;std_msgs;sensor_msgs;geometry_msgs;nav_msgs;tf;gazebo_ros")
+set(depends "roscpp;std_msgs;sensor_msgs;geometry_msgs;nav_msgs;tf;gazebo_ros;message_runtime")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls
@@ -214,7 +214,7 @@ foreach(depend ${depends})
   list(APPEND turtlebot3_gazebo_EXPORTED_TARGETS ${${turtlebot3_gazebo_dep}_EXPORTED_TARGETS})
 endforeach()
 
-set(pkg_cfg_extras "")
+set(pkg_cfg_extras "turtlebot3_gazebo-msg-extras.cmake")
 foreach(extra ${pkg_cfg_extras})
   if(NOT IS_ABSOLUTE ${extra})
     set(extra ${turtlebot3_gazebo_DIR}/${extra})

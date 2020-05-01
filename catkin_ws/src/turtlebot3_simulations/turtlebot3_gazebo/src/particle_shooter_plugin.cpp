@@ -29,6 +29,8 @@
 #include "ros/callback_queue.h"
 #include "ros/subscribe_options.h"
 #include "std_msgs/Float32.h"
+#include "geometry_msgs/Point.h"
+#include "turtlebot3_gazebo/particle_msg.h"
 
 
 //including turtlebot3
@@ -47,10 +49,10 @@ public:
   /// \brief Handle an incoming message from ROS
   /// \param[in] _msg A float value that is used to set the velocity
   /// of the Velodyne.
-  public: void OnRosMsg(const std_msgs::Float32ConstPtr &_msg)
+  public: void OnRosMsg(const turtlebot3_gazebo::particle_msgConstPtr &_msg)
   {
-    ///this->SetVelocity(_msg->data);
-    std::cout << _msg->data;
+    ROS_INFO("%d", _msg->another_field);
+    ROS_INFO("first point: x=%.2f, y=%.2f", _msg->points[0].x, _msg->points[0].y);
   }
 
   /// \brief ROS helper function that processes messages
@@ -88,8 +90,8 @@ public:
 
     // Create a named topic, and subscribe to it.
     ros::SubscribeOptions so =
-      ros::SubscribeOptions::create<std_msgs::Float32>(
-          "/vel_cmd",
+      ros::SubscribeOptions::create<turtlebot3_gazebo::particle_msg>(
+          "/particle_shooter",
           1,
           boost::bind(&ParticleShooterPlugin::OnRosMsg, this, _1),
           ros::VoidPtr(), &this->rosQueue);
@@ -164,7 +166,7 @@ public:
   bool Subscribe_And_Publish(){
 
     // initialize ROS parameter
-    ROS_WARN("Subscribe_And_Publish initalize");
+    //ROS_WARN("Subscribe_And_Publish initalize");
     //ros::init("particle_listener");
 
     ros::NodeHandle n;

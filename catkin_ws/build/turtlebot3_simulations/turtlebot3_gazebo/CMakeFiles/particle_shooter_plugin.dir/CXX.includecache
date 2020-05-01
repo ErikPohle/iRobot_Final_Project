@@ -6,6 +6,24 @@
 
 #IncludeRegexTransform: 
 
+/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/include/turtlebot3_gazebo/particle_msg.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+geometry_msgs/Point.h
+-
+
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/include/turtlebot3_gazebo/turtlebot3_drive.h
 ros/ros.h
 -
@@ -63,6 +81,10 @@ ros/subscribe_options.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/ros/subscribe_options.h
 std_msgs/Float32.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/std_msgs/Float32.h
+geometry_msgs/Point.h
+/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/geometry_msgs/Point.h
+turtlebot3_gazebo/particle_msg.h
+/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/particle_msg.h
 turtlebot3_gazebo/turtlebot3_drive.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/turtlebot3_drive.h
 
