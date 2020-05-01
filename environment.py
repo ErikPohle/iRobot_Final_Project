@@ -38,7 +38,7 @@ class Environment():
             asteroidZ = random.randint(50, self.mapHeight)
             ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
-
+            # very hacky but it works...lol
             x = "astr" + str(random.randint(0, 100000))
             while x in self.dictOfAsteroids:
                 x = "astr" + str(random.randint(0, 100000))

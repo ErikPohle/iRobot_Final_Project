@@ -18,3 +18,6 @@ class Asteroid():
 
     def isHit(self):
         return self.isHit
+
+    def updateIsHit(self, val):
+        self.isHit = val
