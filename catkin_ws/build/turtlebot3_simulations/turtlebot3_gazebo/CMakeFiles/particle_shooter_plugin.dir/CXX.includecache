@@ -85,6 +85,8 @@ geometry_msgs/Point.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/geometry_msgs/Point.h
 turtlebot3_gazebo/particle_msg.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/particle_msg.h
+gazebo/transport/TransportTypes.hh
+-
 turtlebot3_gazebo/turtlebot3_drive.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/turtlebot3_drive.h
 

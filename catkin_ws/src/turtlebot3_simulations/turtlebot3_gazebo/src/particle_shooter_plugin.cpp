@@ -31,6 +31,7 @@
 #include "std_msgs/Float32.h"
 #include "geometry_msgs/Point.h"
 #include "turtlebot3_gazebo/particle_msg.h"
+#include <gazebo/transport/TransportTypes.hh>
 
 
 //including turtlebot3
@@ -49,10 +50,20 @@ public:
   /// \brief Handle an incoming message from ROS
   /// \param[in] _msg A float value that is used to set the velocity
   /// of the Velodyne.
-  public: void OnRosMsg(const turtlebot3_gazebo::particle_msgConstPtr &_msg)
+  public: void OnRosMsg(const geometry_msgs::Pose::ConstPtr &_msg)  
   {
-    ROS_INFO("%d", _msg->another_field);
-    ROS_INFO("first point: x=%.2f, y=%.2f", _msg->points[0].x, _msg->points[0].y);
+    std::cout << "MY ROS MESSAGE" << _msg->position.x;
+
+    //Setting particle position
+    this->x_origin = _msg->position.x;
+    this->y_origin = _msg->position.y;
+    this->z_origin = _msg->position.z;
+
+    //Setting forces to be applied to particle
+    this->x_axis_force = _msg->orientation.x;
+    this->y_axis_force = _msg->orientation.y;
+    this->z_axis_force = _msg->orientation.z;
+
   }
 
   /// \brief ROS helper function that processes messages
@@ -65,15 +76,11 @@ public:
     }
   }
 
+
   void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
   {
-    // Make sure the ROS node for Gazebo has already been initialized                                                                                    
-    // if (!ros::isInitialized())
-    // {
-    //   ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
-    //     << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
-    //   return;
-    // }
+                                                                                        
+    // Make sure the ROS node for Gazebo has already been initialized
 
     if (!ros::isInitialized())
     {
@@ -84,22 +91,15 @@ public:
     }
 
 
-    // Create our ROS node. This acts in a similar manner to
-    // the Gazebo node
+    //Particle shooter subscirber
     this->rosNode.reset(new ros::NodeHandle("gazebo_client"));
+    this->rosNode->setCallbackQueue(&(this->rosQueue));
 
-    // Create a named topic, and subscribe to it.
-    ros::SubscribeOptions so =
-      ros::SubscribeOptions::create<turtlebot3_gazebo::particle_msg>(
-          "/particle_shooter",
-          1,
-          boost::bind(&ParticleShooterPlugin::OnRosMsg, this, _1),
-          ros::VoidPtr(), &this->rosQueue);
-    this->rosSub = this->rosNode->subscribe(so);
+    this->rosSub = this->rosNode->subscribe("/particle_shooter", 10, &ParticleShooterPlugin::OnRosMsg,this);
+    std::cout<<"num of publishers"<<this->rosSub.getNumPublishers()<<std::endl; 
 
-    // Spin up the queue helper thread.
-    this->rosQueueThread =
-      std::thread(std::bind(&ParticleShooterPlugin::QueueThread, this));
+    this->rosQueueThread = std::thread(std::bind(&ParticleShooterPlugin::QueueThread, this));
+
 
     
     
@@ -144,45 +144,7 @@ public:
 
     GetParticleList();
     OutputParticleList();
-    Subscribe_And_Publish();
-
-
-    //odomMsgCallBack();
-
-    ROS_DEBUG("Particle Shooter Ready....");
-  }
-
-
-
-  void chatterCallback(const nav_msgs::Odometry::ConstPtr &msg)
-  {
-    double z_pos = msg->pose.pose.orientation.z;
-    std::cout << "INSIDE CHATTER CALLBACK";
-    std::cout << z_pos;
-
-  }
-
-
-  bool Subscribe_And_Publish(){
-
-    // initialize ROS parameter
-    //ROS_WARN("Subscribe_And_Publish initalize");
-    //ros::init("particle_listener");
-
-    ros::NodeHandle n;
-
-    // initialize ROS parameter
-    std::string cmd_vel_topic_name = n.param<std::string>("cmd_vel_topic_name", "");
-    
-    //std::string cmd_vel_topic_name = n.param<std::string>("cmd_vel_topic_name", "");
-
-    ros::Publisher pos_pub = n.advertise<geometry_msgs::Twist>(cmd_vel_topic_name, 10);
-
-   
-    ros::Subscriber pos_sub = n.subscribe("robot_pos", 10, &ParticleShooterPlugin::chatterCallback, this);
-
-
-    return true;
+  
   }
 
 
@@ -332,11 +294,12 @@ public:
     {
         ROS_WARN("Moving model=%s",model_name.c_str());
 
-        float x_pos_rand = RandomFloat(this->x_origin - this->random_range, this->x_origin + this->random_range);
-        float y_pos_rand = RandomFloat(this->y_origin - this->random_range, this->y_origin + this->random_range);
-        float z_pos_rand = RandomFloat(this->z_origin - this->random_range, this->z_origin + this->random_range);
+        float x_pos_rand = this->x_origin;  //RandomFloat(this->x_origin - this->random_range, this->x_origin + this->random_range);
+        float y_pos_rand = this->y_origin;  //RandomFloat(this->y_origin - this->random_range, this->y_origin + this->random_range);
+        float z_pos_rand = this->z_origin;  //RandomFloat(this->z_origin - this->random_range, this->z_origin + this->random_range);
         
         ROS_DEBUG("POSE-RANDOM[X,Y,Z,Roll,Pitch,Yaw=[%f,%f,%f,%f,%f,%f], model=%s", x_pos_rand,y_pos_rand,z_pos_rand,roll_rand,pitch_rand,yaw_rand,model_name.c_str());
+        ROS_WARN("POSE-RANDOM[X,Y,Z,Roll,Pitch,Yaw=[%f,%f,%f,%f,%f,%f], model=%s", x_pos_rand,y_pos_rand,z_pos_rand,roll_rand,pitch_rand,yaw_rand,model_name.c_str());
         //ignition::math::Pose3 initPose(ignition::math::Vector3<float>(x_pos_rand, y_pos_rand, z_pos_rand), ignition::math::Quaternion<float>(roll_rand, pitch_rand, yaw_rand));
         
         model->SetWorldPose(
@@ -430,27 +393,6 @@ public:
 
 };
 
-int main(int argc, char* argv[])
-  {
-
-    std::cout << "INSIDE MAIN";
-    ros::init(argc, argv, "particle_listener");
-
-    ParticleShooterPlugin particle;
-
-    ros::Rate loop_rate(125);
-
-    while (ros::ok())
-    {
-      //particle.controlLoop();
-      ros::spinOnce();
-      loop_rate.sleep();
-    }
-
-    return 0;
-
-  }
-
 
 GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 }
@@ -458,3 +400,40 @@ GZ_REGISTER_WORLD_PLUGIN(ParticleShooterPlugin)
 
 
 
+int main(int argc, char **argv)
+{
+
+  ros::init(argc, argv, "talker");
+
+  ros::NodeHandle n;
+
+
+
+ ros::Publisher chatter_pub = n.advertise<geometry_msgs::Pose>("part_pose", 1000);
+
+  ros::Rate loop_rate(10);
+  ros::WallDuration sleep_time(15.0);
+  int i=0;
+  while (ros::ok())
+  { if(i==20)break;
+    i++;
+geometry_msgs::Pose msg;
+msg.position.x=1.5;
+msg.position.y=0.0;
+msg.position.z=1.35;
+msg.orientation.x=0.0;
+msg.orientation.y=0.0;
+msg.orientation.z=0.0;
+msg.orientation.w=0.0;
+
+    chatter_pub.publish(msg);
+    ROS_INFO("there is %d subscriber(s)!!!!!!!!!!!",chatter_pub.getNumSubscribers());
+    ros::spinOnce();
+    ROS_INFO("message sent :)");
+    sleep_time.sleep();
+    loop_rate.sleep();
+  }
+
+
+  return 0;
+}
