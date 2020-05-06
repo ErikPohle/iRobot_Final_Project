@@ -15,5 +15,7 @@ roslaunch turtlebot3_navigation turtelbot3_navigation.launch
 	
 Particle shooter plugin - Topic: "/particle_shooter"
 	- message example: rostopic pub -1 /particle_shooter geometry_msgs/Pose '{position:  {x: 0.3, y: 0.3, z: 0.3}, 				   orientation: {x: 0,y: 0,z: 1000}}'
+	
 	- postion: particle position {x_origin, y_origin, z_axis_force}
+	
 	- orientation: forces applied to the particle to be shoot {x_axis_force, y_axis_force, z_axis_force}
