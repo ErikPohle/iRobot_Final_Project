@@ -32,6 +32,7 @@
 #include "geometry_msgs/Point.h"
 #include "turtlebot3_gazebo/particle_msg.h"
 #include <gazebo/transport/TransportTypes.hh>
+#include "std_msgs/Bool.h" 
 
 
 //including turtlebot3
@@ -64,8 +65,19 @@ public:
     this->y_axis_force = _msg->orientation.y;
     this->z_axis_force = _msg->orientation.z;
 
+    //Set shot to true
+    this->shoot = true;
+
   }
 
+
+  // public: void positionreached(const std_msgs::Bool::ConstPtr& Reached)
+  // {
+  //   reached = Reached->data;
+  // }
+
+
+  
   /// \brief ROS helper function that processes messages
   private: void QueueThread()
   {
@@ -76,6 +88,15 @@ public:
     }
   }
 
+  /// \brief ROS helper function that processes messages
+  // private: void QueueThreadShoot()
+  // {
+  //   static const double timeout = 0.01;
+  //   while (this->rosNode->ok())
+  //   {
+  //     this->rosQueue.callAvailable(ros::WallDuration(timeout));
+  //   }
+  // }
 
   void Load(physics::WorldPtr _world, sdf::ElementPtr _sdf)
   {
@@ -88,6 +109,7 @@ public:
       char **argv = NULL;
       ros::init(argc, argv, "gazebo_client",
           ros::init_options::NoSigintHandler);
+
     }
 
 
@@ -96,9 +118,22 @@ public:
     this->rosNode->setCallbackQueue(&(this->rosQueue));
 
     this->rosSub = this->rosNode->subscribe("/particle_shooter", 10, &ParticleShooterPlugin::OnRosMsg,this);
-    std::cout<<"num of publishers"<<this->rosSub.getNumPublishers()<<std::endl; 
+    std::cout<<"num of publishers"<<this->rosSub.getNumPublishers()<<std::endl;  
 
     this->rosQueueThread = std::thread(std::bind(&ParticleShooterPlugin::QueueThread, this));
+
+
+
+    // this->rosNode.reset(new ros::NodeHandle("gazebo_client"));
+    // this->rosNode->setCallbackQueue(&(this->rosQueue));
+
+    // //Publisher to shot particle
+    // this->rosSub = this->rosNode->subscribe("/shoot", 10, &ParticleShooterPlugin::positionreached,this);
+    // std::cout<<"num of publishers"<<this->rosSub.getNumPublishers()<<std::endl;
+
+    // this->rosQueueThread = std::thread(std::bind(&ParticleShooterPlugin::QueueThreadShoot, this));
+
+
 
 
     
@@ -226,15 +261,22 @@ public:
 
   }
 
+
+  
+
   void UpdateParticles(int model_to_update_index)
   {
+
+
     for (auto model : this->world->Models())
     {
         std::string model_name = model->GetName();
-        if (this->modelIDToName[model_to_update_index] == model_name)
+        if (this->modelIDToName[model_to_update_index] == model_name && this->shoot == true)
         {
             this->MoveParticle(model);
             this->SetForceParticle(model);
+
+            this->shoot = false;
         }
         
     }
@@ -378,6 +420,8 @@ public:
   double x_origin = 0.0;
   double y_origin = 0.0;
   double z_origin = 1.0;
+
+  bool shoot = false;
   
   double random_range = 0.1;
 

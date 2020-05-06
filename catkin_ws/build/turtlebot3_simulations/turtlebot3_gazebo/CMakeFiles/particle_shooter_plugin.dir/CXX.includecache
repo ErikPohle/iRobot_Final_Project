@@ -87,6 +87,8 @@ turtlebot3_gazebo/particle_msg.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/particle_msg.h
 gazebo/transport/TransportTypes.hh
 -
+std_msgs/Bool.h
+/home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/std_msgs/Bool.h
 turtlebot3_gazebo/turtlebot3_drive.h
 /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/src/turtlebot3_gazebo/turtlebot3_drive.h
 
@@ -928,6 +930,22 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 std_msgs/Header.h
+-
+
+/opt/ros/melodic/include/std_msgs/Bool.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
 -
 
 /opt/ros/melodic/include/std_msgs/Float32.h

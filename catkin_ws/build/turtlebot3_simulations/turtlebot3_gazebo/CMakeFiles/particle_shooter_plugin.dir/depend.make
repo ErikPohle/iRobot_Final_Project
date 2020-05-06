@@ -71,6 +71,7 @@ turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/ros/wall_timer_options.h
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
+turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/std_msgs/Bool.h
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/std_msgs/Float32.h
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
 turtlebot3_simulations/turtlebot3_gazebo/CMakeFiles/particle_shooter_plugin.dir/src/particle_shooter_plugin.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
