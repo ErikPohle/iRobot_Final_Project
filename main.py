@@ -2,21 +2,22 @@ import rospy
 import numpy as numpy
 import argparse
 import time
-
+import threading
 import environment
-import brain
+import brain, math
 
 def runSim(env, dt):
-	
+
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
-	if outOfAsteroids == -1:
-		print("Out of Asteroids - Spawn More")
-		outOfAsteroids = 0
-		env.spawnAsteroids()
+	#if outOfAsteroids == -1:
+		#print("Out of Asteroids - Spawn More")
+		#outOfAsteroids = 0
+		#env.spawnAsteroids()
 	
 	if env.gameOver == True:
+		pass
 		print("Game Over")
 		return -1
 
@@ -25,7 +26,7 @@ def runSim(env, dt):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Invade This")
-	parser.add_argument('-m','--m',nargs=1,default=[400, 400, 400],help='Map Size')
+	parser.add_argument('-m','--m',nargs=1,default=[400, 400],help='Map Size')
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
 	args = parser.parse_args()
 
@@ -33,7 +34,6 @@ if __name__ == "__main__":
 	brain.init_node_and_such()
 
 	env = environment.Environment(args.m, args.na)
-	env.spawnAsteroids()
 
 	x = runSim(env, 1)
 	numIterations = 1
@@ -42,9 +42,9 @@ if __name__ == "__main__":
 	#BRAIN TESTING
 	# brain.queueDest(0.5,0.5)		#top left
 	# brain.queueDest(0.5,-0.5)		#top right
-	brain.queueDest(-0.5,-0.5)	#bottom right
+	# brain.queueDest(-0.5,-0.5)	#bottom right
 	# brain.queueDest(-0.5,0.5)		#bottom left
-
+	nexttime = time.time()
 	while x != -1:
 		#print(numIterations)
 		numIterations += 1
@@ -53,6 +53,9 @@ if __name__ == "__main__":
 		dt = currentTime - lastFrameTime
 		lastFrameTime = currentTime
 
+		if (math.floor(currentTime) - math.floor(nexttime)) - 4 == 0:
+			nexttime = currentTime
+			env.spawnAsteroids2()
 
 		x = runSim(env, dt)
 
