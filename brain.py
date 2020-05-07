@@ -211,7 +211,7 @@ def queue_asteroids():
 
 def height_to_urgency(height):
 	#higher number the lower the asteroid is
-	return 200-height
+	return 100-height
 
 def tuned_distance(ast):
 	ast_x = ast.x

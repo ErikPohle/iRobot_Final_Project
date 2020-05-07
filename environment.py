@@ -97,6 +97,7 @@ class Environment():
             # if hit, just continue, we dont want to update this asteroid and add it to tempList
             # only non-hit asteroids go on tempList
             if self.dictOfAsteroids[i].isHit:
+                print("removed: ", dictOfAsteroids[i])
                 continue
             
             else:
