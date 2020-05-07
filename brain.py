@@ -1,15 +1,17 @@
 import rospy
 import numpy as np 
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Pose
 from nav_msgs.msg import Odometry
 from actionlib_msgs.msg import GoalStatusArray
 import tf
 
 #publishers
 pub_move = None
+pub_shooter = None
 
 #subscribers
 sub_odom = None
+sub_move_status = None
 
 #globals
 bot_pos = [0, 0, 0] # [X, Y, Z]
@@ -24,10 +26,11 @@ shooting = False
 
 def init_node_and_such():
 	#simply initializes the node, publishers, and subscribers in rospy
-	global pub_move
-	global sub_odom
+	global pub_move, pub_shooter
+	global sub_odom, sub_move_status
 	rospy.init_node("brain")
 	pub_move = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=10)
+	pub_shooter = rospy.Publisher("/particle_shooter", Pose, queue_size=10)
 
 	sub_odom = rospy.Subscriber("/odom", Odometry, setOdomCallback)
 	sub_move_status = rospy.Subscriber("/move_base/status", GoalStatusArray, moveStatusCallback)
@@ -144,3 +147,15 @@ def quaternionToEuler(quaternion):
 	yaw = euler[2]
 
 	return roll, pitch, yaw
+
+def blast(x = 0, y = 0, z = 100):
+	#x,y,z is the force vector, position vector given by robot location
+	msg = Pose()
+	msg.position.x = bot_pos[0]
+	msg.position.y = bot_pos[1]
+	msg.position.z = bot_pos[2]
+	msg.orientation.x = x
+	msg.orientation.y = y
+	msg.orientation.z = z
+
+	pub_shooter.publish(msg)

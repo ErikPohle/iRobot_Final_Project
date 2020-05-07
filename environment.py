@@ -1,4 +1,5 @@
 import math, random, asteroid, bullet
+from geometry_msgs.msg import PoseStamped, Pose
 
 class Environment():
 
@@ -11,7 +12,7 @@ class Environment():
         self.dictOfAsteroids = {}
         self.mapLength = mapDimensions[0]
         self.mapWidth = mapDimensions[1]
-        self.mapHeight = mapDimensions[2]
+        self.mapHeight = 200
         self.numAsteroids = numAsteroids
         self.asteroidSpeed = 2
         self.gameOver = False
@@ -28,6 +29,22 @@ class Environment():
 
         # publisher.publish(msg)
 
+    def spawnAsteroids2(self):
+
+        # generate x and y positions for asteroids and add them to list
+        asteroidX = random.randint(0, self.mapLength)
+        asteroidY = random.randint(0, self.mapWidth)
+        asteroidZ = random.randint(0, 200)
+        ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
+
+        # very hacky but it works...lol
+        x = "astr" + str(random.randint(0, 100000))
+        while x in self.dictOfAsteroids:
+            x = "astr" + str(random.randint(0, 100000))
+        self.dictOfAsteroids[x] = ast
+
+        print("LOG: Spawned Asteroids Succesfully")
+
     # Call after init, while the game is still running if we are out of asteroids from the initial population
     def spawnAsteroids(self):
 
@@ -35,7 +52,7 @@ class Environment():
         for i in range(0, self.numAsteroids):
             asteroidX = random.randint(0, self.mapLength)
             asteroidY = random.randint(0, self.mapWidth)
-            asteroidZ = random.randint(50, self.mapHeight)
+            asteroidZ = random.randint(0, 200)
             ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
             # very hacky but it works...lol
@@ -49,6 +66,10 @@ class Environment():
     def asteroidCollision(self):
         # hmmm
         # need Publisher/Subscriber for health (if asteroid hits player) and points (if player destroys asteroid)
+
+        # position (x,y)
+        #sub_particle = rospy.Subscriber("/particle_shooter", Pose, setBulletPos)
+
         rospy.Subscriber("/particle_shooter", geometry_msgs/Pose, self.initBullet())
 
         for i in self.dictOfAsteroids:
@@ -58,9 +79,16 @@ class Environment():
             if pos[2] <= 25:
                 self.gameOver = True
                 return
+
+
+            # x and y of bullet and asteroid match - bullet shot at asteroid - hit if within 50 units
+            #if (abs(pos[0] - bulletPos[0]) <= 50) and (abs(pos[1] - bulletPos[1]) <= 50):
+                #self.dictOfAsteroids[i].isHit = True
+
             
             if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
  
+
             # if no asteroids have hit the ground yet
             # check if the players bullet hit an asteroid
             # do we need to worry about traveling time of bullet to asteroid?
