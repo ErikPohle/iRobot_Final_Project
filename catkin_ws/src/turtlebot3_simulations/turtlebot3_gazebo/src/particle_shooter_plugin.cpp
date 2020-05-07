@@ -55,6 +55,7 @@ public:
   {
     std::cout << "MY ROS MESSAGE" << _msg->position.x;
 
+
     //Setting particle position
     this->x_origin = _msg->position.x;
     this->y_origin = _msg->position.y;
@@ -67,6 +68,10 @@ public:
 
     //Set shot to true
     this->shoot = true;
+
+    //Reset();
+
+
 
   }
 
@@ -252,6 +257,7 @@ public:
         }
         
     }
+
   }
   
   
