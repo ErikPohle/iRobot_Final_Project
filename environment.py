@@ -2,6 +2,7 @@ import math, random, asteroid, bullet
 from geometry_msgs.msg import PoseStamped, Pose
 
 class Environment():
+    dictOfAsteroids = {}
 
     def __init__(self, mapDimensions, numAsteroids):
 

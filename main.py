@@ -6,8 +6,15 @@ import threading
 import environment
 import brain, math
 
-def runSim(env, dt):
+env = environment.Environment
 
+def runSim(env, dt):
+<<<<<<< HEAD
+
+=======
+	global env
+	
+>>>>>>> garrison
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
@@ -22,6 +29,7 @@ def runSim(env, dt):
 		return -1
 
 if __name__ == "__main__":
+	global env
 	parser = argparse.ArgumentParser(description="Invade This")
 
 	parser.add_argument('-m','--m',nargs=1,default=[-2, 2, 500],help='Map Size')
@@ -38,11 +46,19 @@ if __name__ == "__main__":
 	lastFrameTime = time.time()
 
 	#BRAIN TESTING
+<<<<<<< HEAD
 	# brain.queueDest(0.5,0.5)		#top left
 	# brain.queueDest(0.5,-0.5)		#top right
 	# brain.queueDest(-0.5,-0.5)	#bottom right
 	# brain.queueDest(-0.5,0.5)		#bottom left
 	nexttime = time.time()
+=======
+	brain.queueDest(0.5,0.5)		#top left
+	brain.queueDest(0.5,-0.5)		#top right
+	brain.queueDest(-0.5,-0.5)	#bottom right
+	brain.queueDest(-0.5,0.5)		#bottom left
+
+>>>>>>> garrison
 	while x != -1:
 		#print(numIterations)
 		numIterations += 1
@@ -61,7 +77,6 @@ if __name__ == "__main__":
 	try:
 		while len(brain.dest_queue) > 0:
 			pass
-		brain.blast()
 	except KeyboardInterrupt:
 		pass
 
