@@ -14,7 +14,7 @@ class Environment():
         self.mapWidth = mapDimensions[1]
         self.mapHeight = 200
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 5
+        self.asteroidSpeed = 2
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")

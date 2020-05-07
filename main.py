@@ -26,7 +26,7 @@ def runSim(env, dt):
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Invade This")
-	parser.add_argument('-m','--m',nargs=1,default=[400, 400],help='Map Size')
+	parser.add_argument('-m','--m',nargs=1,default=[-2, 2],help='Map Size')
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
 	args = parser.parse_args()
 
