@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11  -rdynamic CMakeFiles/my_subscriber.dir/src/particle_shooter_plugin.cpp.o  -o /home/natnaelabraha/Desktop/ROBOTICS/catkin_ws/devel/lib/turtlebot3_gazebo/my_subscriber  -L/usr/lib/x86_64-linux-gnu/gazebo-9/plugins 
