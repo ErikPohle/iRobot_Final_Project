@@ -21,8 +21,8 @@ bot_ori = [0, 0, 0, 1] # [X, Y, Z, W]
 cur_dest = [-50, -50, 1] #[X, Y, T] like from setDest()
 dest_queue = []
 
-asteroids = main.env.dictOfAsteroids
-known_asteroids = 0
+asteroids = {}
+last_asteroids = {}
 
 #booleans
 moving = False
@@ -34,10 +34,14 @@ def init_node_and_such():
 	global sub_odom, sub_move_status
 	rospy.init_node("brain")
 	pub_move = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=10)
-	pub_shooter = rospy.Publisher("/particle_shooter", Pose, queue_size=10)
+	pub_shooter = rospy.Publisher("/laser", Pose, queue_size=10)
 
 	sub_odom = rospy.Subscriber("/odom", Odometry, setOdomCallback)
 	sub_move_status = rospy.Subscriber("/move_base/status", GoalStatusArray, moveStatusCallback)
+
+def setDict(ast_dict):
+	global asteroids
+	asteroids = ast_dict
 
 def setDest(X, Y, D, radian=False):
 	#takes in an X,Y,Degree/Radian and sends a message to rospy to move bot
@@ -172,12 +176,11 @@ def blast(x = 0, y = 0, z = 100):
 
 
 def learn_asteroids():
+	global last_asteroids
 	#updates the asteroid dict to current one in environment.
 	# if there was a change, calls the queue_asteroids() fxn to change approach
-	global asteroids
-	temp = main.env.dictOfAsteroids
-	if asteroids != temp:
-		asteroids = temp
+	if asteroids != last_asteroids:
+		last_asteroids = asteroids
 		queue_asteroids()
 		return 1
 	else: #asteroids hasn't changed

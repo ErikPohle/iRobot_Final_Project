@@ -7,7 +7,8 @@ import brain, math
 
 env = environment.Environment
 
-def runSim(env, dt):
+def runSim(dt):
+	global env
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
@@ -21,7 +22,6 @@ def runSim(env, dt):
 		return -1
 
 if __name__ == "__main__":
-	global env
 	parser = argparse.ArgumentParser(description="Invade This")
 
 	parser.add_argument('-m','--m',nargs=1,default=[-2, 2, 500],help='Map Size')
@@ -29,11 +29,11 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	# BRAIN TESTING
-	# brain.init_node_and_such()
+	brain.init_node_and_such()
 
 	env = environment.Environment(args.m, args.na)
 
-	x = runSim(env, 1)
+	x = runSim(1)
 	numIterations = 1
 	lastFrameTime = time.time()
 
@@ -44,26 +44,30 @@ if __name__ == "__main__":
 	# brain.queueDest(-0.5,0.5)		#bottom left
 	nexttime = time.time()
 
-	while x != -1:
-		#print(numIterations)
-		numIterations += 1
-
-		currentTime = time.time()
-		dt = currentTime - lastFrameTime
-		lastFrameTime = currentTime
-
-		if (math.floor(currentTime) - math.floor(nexttime)) - 4 == 0:
-			nexttime = currentTime
-			env.spawnAsteroids2()
-
-		x = runSim(env, dt)
-
-	#BRAIN TESTING
 	try:
-		while len(brain.dest_queue) > 0:
-			pass
+		while x != -1:
+			#print(numIterations)
+			numIterations += 1
+
+			currentTime = time.time()
+			dt = currentTime - lastFrameTime
+			lastFrameTime = currentTime
+
+			if (math.floor(currentTime) - math.floor(nexttime)) - 4 == 0:
+				nexttime = currentTime
+				env.spawnAsteroids2()
+				brain.setDict(env.dictOfAsteroids)
+
+			x = runSim(dt)
 	except KeyboardInterrupt:
 		pass
+
+	#BRAIN TESTING
+	# try:
+	# 	while len(brain.dest_queue) > 0:
+	# 		pass
+	# except KeyboardInterrupt:
+	# 	pass
 
 	"""
 	parser = argparse.ArgumentParser(description="Lab7")
