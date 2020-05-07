@@ -15,7 +15,7 @@ class Environment():
         self.mapWidth = mapDimensions[1]
         self.mapHeight = 200
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 2
+        self.asteroidSpeed = 5
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")
@@ -33,9 +33,9 @@ class Environment():
     def spawnAsteroids2(self):
 
         # generate x and y positions for asteroids and add them to list
-        asteroidX = random.randint(0, self.mapLength)
-        asteroidY = random.randint(0, self.mapWidth)
-        asteroidZ = random.randint(0, 200)
+        asteroidX = random.randint(-2, 2)
+        asteroidY = random.randint(-2, 2)
+        asteroidZ = 200
         ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
         # very hacky but it works...lol
@@ -71,7 +71,7 @@ class Environment():
         # position (x,y)
         #sub_particle = rospy.Subscriber("/particle_shooter", Pose, setBulletPos)
 
-        rospy.Subscriber("/particle_shooter", geometry_msgs/Pose, self.initBullet())
+        #rospy.Subscriber("/particle_shooter", geometry_msgs/Pose, self.initBullet())
 
         for i in self.dictOfAsteroids:
             pos = self.dictOfAsteroids[i].getPos()
@@ -87,7 +87,7 @@ class Environment():
                 #self.dictOfAsteroids[i].isHit = True
 
             
-            if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
+            # if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
  
 
             # if no asteroids have hit the ground yet
@@ -120,7 +120,7 @@ class Environment():
         else:
             return 0
     
-    def initBullet(self, x, y, z, vx, vy, vz):
+    #def initBullet(self, x, y, z, vx, vy, vz):
 
 
 

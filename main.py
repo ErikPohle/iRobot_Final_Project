@@ -2,7 +2,6 @@ import rospy
 import numpy as numpy
 import argparse
 import time
-import threading
 import environment
 import brain, math
 
@@ -18,7 +17,6 @@ def runSim(env, dt):
 		#env.spawnAsteroids()
 	
 	if env.gameOver == True:
-		pass
 		print("Game Over")
 		return -1
 
