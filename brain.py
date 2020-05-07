@@ -4,6 +4,7 @@ from geometry_msgs.msg import PoseStamped, Pose
 from nav_msgs.msg import Odometry
 from actionlib_msgs.msg import GoalStatusArray
 import tf
+import main
 
 #publishers
 pub_move = None
@@ -20,6 +21,9 @@ bot_ori = [0, 0, 0, 1] # [X, Y, Z, W]
 cur_dest = [-50, -50, 1] #[X, Y, T] like from setDest()
 dest_queue = []
 
+asteroids = {}
+last_asteroids = {}
+
 #booleans
 moving = False
 shooting = False
@@ -30,10 +34,14 @@ def init_node_and_such():
 	global sub_odom, sub_move_status
 	rospy.init_node("brain")
 	pub_move = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=10)
-	pub_shooter = rospy.Publisher("/particle_shooter", Pose, queue_size=10)
+	pub_shooter = rospy.Publisher("/laser", Pose, queue_size=10)
 
 	sub_odom = rospy.Subscriber("/odom", Odometry, setOdomCallback)
 	sub_move_status = rospy.Subscriber("/move_base/status", GoalStatusArray, moveStatusCallback)
+
+def setDict(ast_dict):
+	global asteroids
+	asteroids = ast_dict
 
 def setDest(X, Y, D, radian=False):
 	#takes in an X,Y,Degree/Radian and sends a message to rospy to move bot
@@ -74,12 +82,17 @@ def setOdomCallback(msg):
 	bot_pos[1] = msg.pose.pose.position.y
 	bot_pos[2] = msg.pose.pose.position.z
 	# bot_pos = msg.pose.pose.position
-	mn_status_code = moveNext()
 
 	bot_ori[0] = msg.pose.pose.orientation.x
 	bot_ori[1] = msg.pose.pose.orientation.y
 	bot_ori[2] = msg.pose.pose.orientation.z
 	bot_ori[3] = msg.pose.pose.orientation.w
+
+	#checks asteroids and updates dest_queue according to cost function
+	learn_asteroids()
+	# if goal is reached, shoot, then move to the next goal in dest_queue
+	# else, pass and wait for bot to finish current move_goal
+	mn_status_code = moveNext()
 
 def moveStatusCallback(msg):
 	#sets moving to false if the destination has been reached
@@ -96,6 +109,7 @@ def moveNext(aim_for_next = True):
 	if moving or shooting:
 		return -1
 	elif not moving:
+		blast()
 		if len(dest_queue) == 0:
 			return -2 #no destinations queued
 
@@ -153,9 +167,58 @@ def blast(x = 0, y = 0, z = 100):
 	msg = Pose()
 	msg.position.x = bot_pos[0]
 	msg.position.y = bot_pos[1]
-	msg.position.z = bot_pos[2]
+	msg.position.z = 0.3
 	msg.orientation.x = x
 	msg.orientation.y = y
 	msg.orientation.z = z
 
 	pub_shooter.publish(msg)
+
+
+def learn_asteroids():
+	global last_asteroids
+	#updates the asteroid dict to current one in environment.
+	# if there was a change, calls the queue_asteroids() fxn to change approach
+	if asteroids != last_asteroids:
+		last_asteroids = asteroids
+		queue_asteroids()
+		return 1
+	else: #asteroids hasn't changed
+		return 0
+
+def queue_asteroids():
+	global dest_queue
+	#uses the dictionary of asteroids to calculate a cost for each
+	# and then queues the locations of each depending on cost
+	kQueue = []
+	for astKey in asteroids:
+		curAst = asteroids[astKey]
+		#if an asteroid is about to hit the ground, it needs priority
+		# high urgency corresponds to an asteroid near ground
+		urgency = height_to_urgency(curAst.z)
+		#nice to hit nearby asteroids on the way
+		# high distance means asteroid is far out of way (tuned, not linear)
+		distance = tuned_distance(curAst)
+		#overall priority is a balancing act between these two
+		# high priority comes first 
+		priority = urgency - distance
+		kQueue.append((astKey, priority))
+	kQueue.sort(key=lambda tup: tup[1]) #sorts based on priority values
+	#clear queue
+	dest_queue = []
+	for key, priority in kQueue:
+		queueDest(asteroids[key].x, asteroids[key].y)
+
+def height_to_urgency(height):
+	#higher number the lower the asteroid is
+	return 200-height
+
+def tuned_distance(ast):
+	ast_x = ast.x
+	ast_y = ast.y
+	bot_x = bot_pos[0]
+	bot_y = bot_pos[1]
+
+	dist = np.sqrt((ast_y - bot_y)**2+(ast_x - bot_x)**2)
+	#less than 6 always, and urgency is like 0-200, so scale
+	return dist * 10
