@@ -94,16 +94,6 @@ namespace message_traits
 
 
 template <class ContainerAllocator>
-struct IsMessage< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> >
-  : TrueType
-  { };
-
-template <class ContainerAllocator>
-struct IsMessage< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> const>
-  : TrueType
-  { };
-
-template <class ContainerAllocator>
 struct IsFixedSize< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> >
   : FalseType
   { };
@@ -111,6 +101,16 @@ struct IsFixedSize< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> >
 template <class ContainerAllocator>
 struct IsFixedSize< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> const>
   : FalseType
+  { };
+
+template <class ContainerAllocator>
+struct IsMessage< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> >
+  : TrueType
+  { };
+
+template <class ContainerAllocator>
+struct IsMessage< ::turtlebot3_gazebo::particle_msg_<ContainerAllocator> const>
+  : TrueType
   { };
 
 template <class ContainerAllocator>

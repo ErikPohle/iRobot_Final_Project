@@ -14,7 +14,7 @@ class Environment():
         self.mapWidth = mapDimensions[1]
         self.mapHeight = 200
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 2
+        self.asteroidSpeed = 5
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")
@@ -32,9 +32,9 @@ class Environment():
     def spawnAsteroids2(self):
 
         # generate x and y positions for asteroids and add them to list
-        asteroidX = random.randint(0, self.mapLength)
-        asteroidY = random.randint(0, self.mapWidth)
-        asteroidZ = random.randint(0, 200)
+        asteroidX = random.randint(-2, 2)
+        asteroidY = random.randint(-2, 2)
+        asteroidZ = 200
         ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
         # very hacky but it works...lol
@@ -66,8 +66,12 @@ class Environment():
     def asteroidCollision(self):
         # hmmm
         # need Publisher/Subscriber for health (if asteroid hits player) and points (if player destroys asteroid)
+
         # position (x,y)
         #sub_particle = rospy.Subscriber("/particle_shooter", Pose, setBulletPos)
+
+        #rospy.Subscriber("/particle_shooter", geometry_msgs/Pose, self.initBullet())
+
         for i in self.dictOfAsteroids:
             pos = self.dictOfAsteroids[i].getPos()
             
@@ -76,9 +80,15 @@ class Environment():
                 self.gameOver = True
                 return
 
+
             # x and y of bullet and asteroid match - bullet shot at asteroid - hit if within 50 units
             #if (abs(pos[0] - bulletPos[0]) <= 50) and (abs(pos[1] - bulletPos[1]) <= 50):
                 #self.dictOfAsteroids[i].isHit = True
+
+            
+            # if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
+ 
+
             # if no asteroids have hit the ground yet
             # check if the players bullet hit an asteroid
             # do we need to worry about traveling time of bullet to asteroid?
@@ -108,7 +118,10 @@ class Environment():
             return -1
         else:
             return 0
-            
+    
+    #def initBullet(self, x, y, z, vx, vy, vz):
+
+
 
 if __name__ == "__main__":
     initEnv()

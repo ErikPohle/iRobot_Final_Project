@@ -2,7 +2,6 @@ import rospy
 import numpy as numpy
 import argparse
 import time
-import threading
 import environment
 import brain, math
 
@@ -17,21 +16,18 @@ def runSim(env, dt):
 		#env.spawnAsteroids()
 	
 	if env.gameOver == True:
-		pass
 		print("Game Over")
 		return -1
 
-
-
-
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Invade This")
-	parser.add_argument('-m','--m',nargs=1,default=[-2, 2],help='Map Size')
+
+	parser.add_argument('-m','--m',nargs=1,default=[-2, 2, 500],help='Map Size')
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
 	args = parser.parse_args()
 
-	#BRAIN TESTING
-	brain.init_node_and_such()
+	# BRAIN TESTING
+	# brain.init_node_and_such()
 
 	env = environment.Environment(args.m, args.na)
 
