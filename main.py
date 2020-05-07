@@ -9,12 +9,6 @@ import brain, math
 env = environment.Environment
 
 def runSim(env, dt):
-<<<<<<< HEAD
-
-=======
-	global env
-	
->>>>>>> garrison
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
 
@@ -46,19 +40,12 @@ if __name__ == "__main__":
 	lastFrameTime = time.time()
 
 	#BRAIN TESTING
-<<<<<<< HEAD
 	# brain.queueDest(0.5,0.5)		#top left
 	# brain.queueDest(0.5,-0.5)		#top right
 	# brain.queueDest(-0.5,-0.5)	#bottom right
 	# brain.queueDest(-0.5,0.5)		#bottom left
 	nexttime = time.time()
-=======
-	brain.queueDest(0.5,0.5)		#top left
-	brain.queueDest(0.5,-0.5)		#top right
-	brain.queueDest(-0.5,-0.5)	#bottom right
-	brain.queueDest(-0.5,0.5)		#bottom left
 
->>>>>>> garrison
 	while x != -1:
 		#print(numIterations)
 		numIterations += 1
