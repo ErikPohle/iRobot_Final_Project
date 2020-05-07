@@ -33,8 +33,8 @@ class Environment():
     def spawnAsteroids2(self):
 
         # generate x and y positions for asteroids and add them to list
-        asteroidX = random.randint(-2, 2)
-        asteroidY = random.randint(-2, 2)
+        asteroidX = random.uniform(-2, 2)
+        asteroidY = random.uniform(-2, 2)
         asteroidZ = 200
         ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
@@ -44,7 +44,7 @@ class Environment():
             x = "astr" + str(random.randint(0, 100000))
         self.dictOfAsteroids[x] = ast
 
-        print("LOG: Spawned Asteroids Succesfully")
+        print("LOG: Spawned Asteroids Succesfully: ", asteroidX, asteroidY )
 
     # Call after init, while the game is still running if we are out of asteroids from the initial population
     def spawnAsteroids(self):
@@ -120,6 +120,9 @@ class Environment():
         else:
             return 0
     
+    def getDict(self):
+        return self.dictOfAsteroids
+
     #def initBullet(self, x, y, z, vx, vy, vz):
 
 
