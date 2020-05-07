@@ -1,6 +1,7 @@
 import math, random, asteroid
 
 class Environment():
+    dictOfAsteroids = {}
 
     def __init__(self, mapDimensions, numAsteroids):
 

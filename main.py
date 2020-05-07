@@ -6,7 +6,10 @@ import time
 import environment
 import brain
 
+env = environment.Environment
+
 def runSim(env, dt):
+	global env
 	
 	outOfAsteroids = env.updateAsteroids(dt)
 	env.asteroidCollision()
@@ -24,6 +27,7 @@ def runSim(env, dt):
 
 
 if __name__ == "__main__":
+	global env
 	parser = argparse.ArgumentParser(description="Invade This")
 	parser.add_argument('-m','--m',nargs=1,default=[400, 400, 400],help='Map Size')
 	parser.add_argument('-na','--na',nargs=1,default=10,help='Number of Initial Asteroids')
@@ -40,10 +44,10 @@ if __name__ == "__main__":
 	lastFrameTime = time.time()
 
 	#BRAIN TESTING
-	# brain.queueDest(0.5,0.5)		#top left
-	# brain.queueDest(0.5,-0.5)		#top right
+	brain.queueDest(0.5,0.5)		#top left
+	brain.queueDest(0.5,-0.5)		#top right
 	brain.queueDest(-0.5,-0.5)	#bottom right
-	# brain.queueDest(-0.5,0.5)		#bottom left
+	brain.queueDest(-0.5,0.5)		#bottom left
 
 	while x != -1:
 		#print(numIterations)
@@ -60,7 +64,6 @@ if __name__ == "__main__":
 	try:
 		while len(brain.dest_queue) > 0:
 			pass
-		brain.blast()
 	except KeyboardInterrupt:
 		pass
 
