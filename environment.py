@@ -118,12 +118,12 @@ class Environment():
             pos = self.dictOfAsteroids[i].getPos()
 
             # x and y of laser and asteroid match - laser shot at asteroid - hit if within 2 units
-            if (abs(pos[0] - msg.pose.x) <= 2) and (abs(pos[1] - msg.pose.y) <= 2):
+            if (abs(pos[0] - msg.position.x) <= 2) and (abs(pos[1] - msg.position.y) <= 2):
                 self.dictOfAsteroids[i].isHit = True
         
         # update asteroids - they arent moving, we just want to see if any have been hit
         # and if so remove them from dict
-        updateAsteroids(0)
+        self.updateAsteroids(0)
 
     def getDict(self):
         return self.dictOfAsteroids
