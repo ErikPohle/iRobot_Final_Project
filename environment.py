@@ -1,4 +1,4 @@
-import math, random, asteroid, bullet
+import math, random, asteroid, bullet, tf, rospy
 from geometry_msgs.msg import PoseStamped, Pose
 
 class Environment():
@@ -17,6 +17,8 @@ class Environment():
         self.numAsteroids = numAsteroids
         self.asteroidSpeed = 5
         self.gameOver = False
+
+        sub_laser = rospy.Subscriber("/laser", Pose, self.checkCollision)
         
         print("LOG: Environment Succesfully Initialized.")
 
@@ -30,12 +32,12 @@ class Environment():
 
         # publisher.publish(msg)
 
-    def spawnAsteroids2(self):
+    def spawnAsteroidsEveryX(self):
 
         # generate x and y positions for asteroids and add them to list
         asteroidX = random.uniform(-2, 2)
         asteroidY = random.uniform(-2, 2)
-        asteroidZ = 200
+        asteroidZ = 100
         ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
 
         # very hacky but it works...lol
@@ -44,24 +46,17 @@ class Environment():
             x = "astr" + str(random.randint(0, 100000))
         self.dictOfAsteroids[x] = ast
 
-        print("LOG: Spawned Asteroids Succesfully: ", asteroidX, asteroidY )
+        ''' WEIRD BEHAVIOR WHEN SPAWNING ASTEROIDS
+        pub_asteroid = rospy.Publisher("/particle_shooter", Pose, queue_size=10)
+        msg = Pose()
+        msg.position.x = 0
+        msg.position.y = 0
+        msg.position.z = 10
+        msg.orientation.z = -100
+        print(msg)
+        pub_asteroid.publish(msg)
+        '''
 
-    # Call after init, while the game is still running if we are out of asteroids from the initial population
-    def spawnAsteroids(self):
-
-        # generate x and y positions for asteroids and add them to list
-        for i in range(0, self.numAsteroids):
-            asteroidX = random.randint(0, self.mapLength)
-            asteroidY = random.randint(0, self.mapWidth)
-            asteroidZ = random.randint(0, 200)
-            ast = asteroid.Asteroid(asteroidX, asteroidY, asteroidZ)
-
-            # very hacky but it works...lol
-            x = "astr" + str(random.randint(0, 100000))
-            while x in self.dictOfAsteroids:
-                x = "astr" + str(random.randint(0, 100000))
-            self.dictOfAsteroids[x] = ast
-        
         print("LOG: Spawned Asteroids Succesfully")
 
     def asteroidCollision(self):
@@ -86,9 +81,6 @@ class Environment():
             #if (abs(pos[0] - bulletPos[0]) <= 50) and (abs(pos[1] - bulletPos[1]) <= 50):
                 #self.dictOfAsteroids[i].isHit = True
 
-            
-            # if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
- 
 
             # if no asteroids have hit the ground yet
             # check if the players bullet hit an asteroid
@@ -120,11 +112,21 @@ class Environment():
         else:
             return 0
     
+    def checkCollision(self, msg):
+
+        for i in self.dictOfAsteroids:
+            pos = self.dictOfAsteroids[i].getPos()
+
+            # x and y of laser and asteroid match - laser shot at asteroid - hit if within 2 units
+            if (abs(pos[0] - msg.pose.x) <= 2) and (abs(pos[1] - msg.pose.y) <= 2):
+                self.dictOfAsteroids[i].isHit = True
+        
+        # update asteroids - they arent moving, we just want to see if any have been hit
+        # and if so remove them from dict
+        updateAsteroids(0)
+
     def getDict(self):
         return self.dictOfAsteroids
-
-    #def initBullet(self, x, y, z, vx, vy, vz):
-
 
 
 if __name__ == "__main__":
