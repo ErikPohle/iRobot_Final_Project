@@ -1,4 +1,4 @@
-import math, random, asteroid
+import math, random, asteroid, bullet
 
 class Environment():
 
@@ -13,7 +13,7 @@ class Environment():
         self.mapWidth = mapDimensions[1]
         self.mapHeight = mapDimensions[2]
         self.numAsteroids = numAsteroids
-        self.asteroidSpeed = 5
+        self.asteroidSpeed = 2
         self.gameOver = False
         
         print("LOG: Environment Succesfully Initialized.")
@@ -49,6 +49,7 @@ class Environment():
     def asteroidCollision(self):
         # hmmm
         # need Publisher/Subscriber for health (if asteroid hits player) and points (if player destroys asteroid)
+        rospy.Subscriber("/particle_shooter", geometry_msgs/Pose, self.initBullet())
 
         for i in self.dictOfAsteroids:
             pos = self.dictOfAsteroids[i].getPos()
@@ -58,6 +59,8 @@ class Environment():
                 self.gameOver = True
                 return
             
+            if pos[0] == bulletLoc[0] and pos[1] == bulletLoc[1] and 
+ 
             # if no asteroids have hit the ground yet
             # check if the players bullet hit an asteroid
             # do we need to worry about traveling time of bullet to asteroid?
@@ -87,7 +90,10 @@ class Environment():
             return -1
         else:
             return 0
-            
+    
+    def initBullet(self, x, y, z, vx, vy, vz):
+
+
 
 if __name__ == "__main__":
     initEnv()
