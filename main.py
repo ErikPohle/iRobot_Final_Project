@@ -30,7 +30,7 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	#BRAIN TESTING
-	# brain.init_node_and_such()
+	brain.init_node_and_such()
 
 	env = environment.Environment(args.m, args.na)
 	env.spawnAsteroids()
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 	#BRAIN TESTING
 	# brain.queueDest(0.5,0.5)		#top left
 	# brain.queueDest(0.5,-0.5)		#top right
-	# brain.queueDest(-0.5,-0.5)	#bottom right
+	brain.queueDest(-0.5,-0.5)	#bottom right
 	# brain.queueDest(-0.5,0.5)		#bottom left
 
 	while x != -1:
@@ -57,11 +57,12 @@ if __name__ == "__main__":
 		x = runSim(env, dt)
 
 	#BRAIN TESTING
-	# try:
-	# 	while len(brain.dest_queue) > 0:
-	# 		pass
-	# except KeyboardInterrupt:
-	# 	pass
+	try:
+		while len(brain.dest_queue) > 0:
+			pass
+		brain.blast()
+	except KeyboardInterrupt:
+		pass
 
 	"""
 	parser = argparse.ArgumentParser(description="Lab7")
