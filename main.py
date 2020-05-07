@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
 			if (math.floor(currentTime) - math.floor(nexttime)) - 4 == 0:
 				nexttime = currentTime
-				env.spawnAsteroids2()
+				env.spawnAsteroidsEveryX()
 				brain.setDict(env.dictOfAsteroids)
 
 			x = runSim(dt)
